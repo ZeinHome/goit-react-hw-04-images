@@ -15,26 +15,17 @@ export default function ImageGallery({ imageName }) {
   const [tags, setTags] = useState(null);
 
   useEffect(() => {
-    if (imageName !== '') {
-      const ImagesDate = fetchImages(imageName, pages);
-      setIsloading(true);
-
-      ImagesDate.then(res => {
-        return setImagesArray(res.hits, setPages(1));
-      }).finally(setIsloading(false));
+    const ImagesDate = fetchImages(imageName, pages);
+    if (imageName === '') {
+      return;
     }
-  }, [imageName]);
-  useEffect(() => {
-    if (pages !== 1) {
-      setIsloading(true);
 
-      const ImagesDate = fetchImages(imageName, pages);
+    setIsloading(true);
 
-      ImagesDate.then(res => {
-        return setImagesArray([...imagesArray, ...res.hits]);
-      }).finally(setIsloading(false));
-    }
-  }, [pages]);
+    ImagesDate.then(res => {
+      return setImagesArray(state => [...state, ...res.hits]);
+    }).finally(setIsloading(false));
+  }, [imageName, pages]);
 
   const loadMore = () => {
     setPages(prevState => prevState + 1);
